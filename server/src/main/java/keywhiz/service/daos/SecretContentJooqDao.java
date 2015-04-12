@@ -29,7 +29,7 @@ import org.jooq.tools.json.JSONObject;
 import static keywhiz.jooq.tables.SecretsContent.SECRETS_CONTENT;
 
 /**
- * Jooq version of SecretContentDAO.
+ * Interacts with 'secrets_content' table and actions on {@link SecretContent} entities.
  */
 public class SecretContentJooqDao {
   private final DSLContext dslContext;
