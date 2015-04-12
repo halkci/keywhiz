@@ -27,13 +27,6 @@ import org.jooq.DSLContext;
 
 import static keywhiz.jooq.tables.Clients.CLIENTS;
 
-/**
- * Jooq version of ClientDAO.
- *
- * We can't directly replace ClientDAO with this class because of the way AclDAO gets instantiated.
- * My plan is to therefore first implement all the jooq DAOs and then gradually remove the jdbi
- * stuff.
- */
 public class ClientDAO {
   private final DSLContext dslContext;
 
