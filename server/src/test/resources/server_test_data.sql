@@ -32,8 +32,8 @@ INSERT INTO secrets_content (id, secretid, version, createdat, updatedat, encryp
 (939, 739, '', '2011-09-29 15:46:00.232', '2015-01-07 12:02:06.73539', '{"derivationInfo":"Database_Password","content":"etQQFqMHQQpGr4aDlj5gDjiABkOb","iv":"ia+YixjAEqp9W3JEjaYLvQ"}', ''),
 (940, 740, '', '2011-09-29 15:46:00.312', '2015-01-07 12:02:06.758446', '{"derivationInfo":"General_Password","content":"A6kBLXwmx0EVtuIGTzxHiEZ/6yrXgg","iv":"e4I0c3fog0TKqTAC2UxYtQ"}', ''),
 (941, 741, '', '2011-09-29 15:46:00.232', '2015-01-07 12:02:06.78574', '{"derivationInfo":"NonexistentOwner_Pass","content":"+Pu1B5YgqGRIHzh17s5tPT3AYb+W","iv":"ewRV3RhFfLnbWxY5pr401g"}', '{"owner":"NonExistant","mode":"0400"}'),
-(942, 742, '0aae825a73e161d8', '2011-09-29 15:46:00.232', '2015-01-07 12:02:06.806212', '{"derivationInfo":"Versioned_Password","content":"GC8/ZvEfqpxhtAkThgZ8/+vPesh9","iv":"oRf3CMnB7jv63K33dJFeFg"}', ''),
-(943, 742, '0aae825a73e161e8', '2011-09-29 16:46:00.232', '2011-09-29 16:46:00.232', '{"derivationInfo":"Versioned_Password","content":"GC8/ZvEfqpxhtAkThgZ8/+vPesh9","iv":"oRf3CMnB7jv63K33dJFeFg"}', ''),
+(942, 742, '0aae825a73e161d8', '2011-09-29 15:46:00.232', '2015-01-07 12:02:06.806212', '{"derivationInfo":"Versioned_Password","content":"GC8/ZvEfqpxhtAkThgZ8/+vPesh9","iv":"oRf3CMnB7jv63K33dJFeFg"}', '{"owner":"admin","mode":"0400"}'),
+(943, 742, '0aae825a73e161e8', '2011-09-29 16:46:00.232', '2011-09-29 16:46:00.232', '{"derivationInfo":"Versioned_Password","content":"GC8/ZvEfqpxhtAkThgZ8/+vPesh9","iv":"oRf3CMnB7jv63K33dJFeFg"}', '{"owner":"new-admin","mode":"0400"}'),
 (944, 742, '0aae825a73e161f8', '2011-09-29 17:46:00.232', '2011-09-29 17:46:00.232', '{"derivationInfo":"Versioned_Password","content":"GC8/ZvEfqpxhtAkThgZ8/+vPesh9","iv":"oRf3CMnB7jv63K33dJFeFg"}', ''),
 (945, 742, '0aae825a73e161g8', '2011-09-29 18:46:00.232', '2011-09-29 18:46:00.232', '{"derivationInfo":"Versioned_Password","content":"GC8/ZvEfqpxhtAkThgZ8/+vPesh9","iv":"oRf3CMnB7jv63K33dJFeFg"}', '');
 
