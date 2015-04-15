@@ -54,7 +54,7 @@ import keywhiz.service.config.Readonly;
 import keywhiz.service.crypto.ContentCryptographer;
 import keywhiz.service.crypto.CryptoModule;
 import keywhiz.service.crypto.SecretTransformer;
-import keywhiz.service.daos.AclJooqDao;
+import keywhiz.service.daos.AclDAO;
 import keywhiz.service.daos.ClientDAO;
 import keywhiz.service.daos.ClientJooqDao;
 import keywhiz.service.daos.GroupDAO;
@@ -244,10 +244,10 @@ public class ServiceModule extends AbstractModule {
     return new SecretSeriesJooqDao(jooqContext);
   }
 
-  @Provides @Singleton AclJooqDao aclJooqDao(DSLContext jooqContext, ClientJooqDao clientJooqDao,
+  @Provides @Singleton AclDAO aclDAO(DSLContext jooqContext, ClientJooqDao clientJooqDao,
       GroupJooqDao groupJooqDao, SecretContentJooqDao secretContentJooqDao,
       SecretSeriesJooqDao secretSeriesJooqDao) {
-    return new AclJooqDao(jooqContext, clientJooqDao, groupJooqDao, secretContentJooqDao,
+    return new AclDAO(jooqContext, clientJooqDao, groupJooqDao, secretContentJooqDao,
         secretSeriesJooqDao);
   }
 
@@ -272,11 +272,11 @@ public class ServiceModule extends AbstractModule {
     return new SecretSeriesJooqDao(jooqContext);
   }
 
-  @Provides @Singleton @Readonly AclJooqDao readonlyAclJooqDao(@Readonly DSLContext jooqContext,
+  @Provides @Singleton @Readonly AclDAO readonlyAclDAO(@Readonly DSLContext jooqContext,
       @Readonly ClientJooqDao clientJooqDao, @Readonly GroupJooqDao groupJooqDao,
       @Readonly SecretContentJooqDao secretContentJooqDao,
       @Readonly SecretSeriesJooqDao secretSeriesJooqDao) {
-    return new AclJooqDao(jooqContext, clientJooqDao, groupJooqDao, secretContentJooqDao,
+    return new AclDAO(jooqContext, clientJooqDao, groupJooqDao, secretContentJooqDao,
         secretSeriesJooqDao);
   }
 
