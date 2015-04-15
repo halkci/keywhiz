@@ -47,7 +47,7 @@ public class SecretGeneratorModuleTest {
 
   @Mock private SecretController secretController;
 
-  // A SecretJooqDao will need to be bound.
+  // A {@link SecretDAO} will need to be bound.
   private final Module secretControllerModule = new AbstractModule() {
     @Override protected void configure() {
       bind(SecretController.class).toInstance(secretController);
