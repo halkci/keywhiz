@@ -48,16 +48,16 @@ public class AclDAO {
   private static final Logger logger = LoggerFactory.getLogger(AclDAO.class);
 
   private final DSLContext dslContext;
-  private ClientJooqDao clientJooqDao;
+  private ClientDAO clientDAO;
   private GroupJooqDao groupJooqDao;
   private SecretContentJooqDao secretContentJooqDao;
   private SecretSeriesJooqDao secretSeriesJooqDao;
 
   @Inject
-  public AclDAO(DSLContext dslContext, ClientJooqDao clientJooqDao, GroupJooqDao groupJooqDao,
+  public AclDAO(DSLContext dslContext, ClientDAO clientDAO, GroupJooqDao groupJooqDao,
       SecretContentJooqDao secretContentJooqDao, SecretSeriesJooqDao secretSeriesJooqDao) {
     this.dslContext = dslContext;
-    this.clientJooqDao = clientJooqDao;
+    this.clientDAO = clientDAO;
     this.groupJooqDao = groupJooqDao;
     this.secretContentJooqDao = secretContentJooqDao;
     this.secretSeriesJooqDao = secretSeriesJooqDao;
@@ -101,7 +101,7 @@ public class AclDAO {
 
   public void findAndEnrollClient(long clientId, long groupId) {
     dslContext.transaction(configuration -> {
-      Optional<Client> client = clientJooqDao.getClientById(clientId);
+      Optional<Client> client = clientDAO.getClientById(clientId);
       if (!client.isPresent()) {
         logger.info("Failure to enroll membership clientId {}, groupId {}: clientId not found.",
             clientId, groupId);
@@ -121,7 +121,7 @@ public class AclDAO {
 
   public void findAndEvictClient(long clientId, long groupId) {
     dslContext.transaction(configuration -> {
-      Optional<Client> client = clientJooqDao.getClientById(clientId);
+      Optional<Client> client = clientDAO.getClientById(clientId);
       if (!client.isPresent()) {
         logger.info("Failure to evict membership clientId {}, groupId {}: clientId not found.",
             clientId, groupId);
@@ -187,7 +187,7 @@ public class AclDAO {
             .join(GROUPS).on(GROUPS.ID.eq(MEMBERSHIPS.GROUPID)))
         .where(GROUPS.NAME.eq(group.getName()))
         .fetch()
-        .map(new ClientJooqMapper());
+        .map(new ClientMapper());
     return new HashSet<>(r);
   }
 
@@ -214,7 +214,7 @@ public class AclDAO {
             .join(SECRETS).on(SECRETS.ID.eq(ACCESSGRANTS.SECRETID)))
         .where(SECRETS.NAME.eq(secret.getName()))
         .fetch()
-        .map(new ClientJooqMapper());
+        .map(new ClientMapper());
     return new HashSet<>(r);
   }
 

@@ -55,7 +55,7 @@ import keywhiz.service.crypto.ContentCryptographer;
 import keywhiz.service.crypto.CryptoModule;
 import keywhiz.service.crypto.SecretTransformer;
 import keywhiz.service.daos.AclDAO;
-import keywhiz.service.daos.ClientJooqDao;
+import keywhiz.service.daos.ClientDAO;
 import keywhiz.service.daos.GroupDAO;
 import keywhiz.service.daos.GroupJooqDao;
 import keywhiz.service.daos.MapArgumentFactory;
@@ -219,8 +219,8 @@ public class ServiceModule extends AbstractModule {
     return DSL.using(dataSource.getConnection());
   }
 
-  @Provides @Singleton ClientJooqDao clientJooqDao(DSLContext jooqContext) {
-    return new ClientJooqDao(jooqContext);
+  @Provides @Singleton ClientDAO clientDAO(DSLContext jooqContext) {
+    return new ClientDAO(jooqContext);
   }
 
   @Provides @Singleton GroupJooqDao groupJooqDao(DSLContext jooqContext) {
@@ -235,10 +235,10 @@ public class ServiceModule extends AbstractModule {
     return new SecretSeriesJooqDao(jooqContext);
   }
 
-  @Provides @Singleton AclDAO aclDAO(DSLContext jooqContext, ClientJooqDao clientJooqDao,
+  @Provides @Singleton AclDAO aclDAO(DSLContext jooqContext, ClientDAO clientDAO,
       GroupJooqDao groupJooqDao, SecretContentJooqDao secretContentJooqDao,
       SecretSeriesJooqDao secretSeriesJooqDao) {
-    return new AclDAO(jooqContext, clientJooqDao, groupJooqDao, secretContentJooqDao,
+    return new AclDAO(jooqContext, clientDAO, groupJooqDao, secretContentJooqDao,
         secretSeriesJooqDao);
   }
 
@@ -247,8 +247,8 @@ public class ServiceModule extends AbstractModule {
     return DSL.using(dataSource.getConnection());
   }
 
-  @Provides @Singleton @Readonly ClientJooqDao readonlyClientJooqDao(@Readonly DSLContext jooqContext) {
-    return new ClientJooqDao(jooqContext);
+  @Provides @Singleton @Readonly ClientDAO readonlyClientDAO(@Readonly DSLContext jooqContext) {
+    return new ClientDAO(jooqContext);
   }
 
   @Provides @Singleton @Readonly GroupJooqDao readonlyGroupJooqDao(@Readonly DSLContext jooqContext) {
@@ -264,10 +264,10 @@ public class ServiceModule extends AbstractModule {
   }
 
   @Provides @Singleton @Readonly AclDAO readonlyAclDAO(@Readonly DSLContext jooqContext,
-      @Readonly ClientJooqDao clientJooqDao, @Readonly GroupJooqDao groupJooqDao,
+      @Readonly ClientDAO clientDAO, @Readonly GroupJooqDao groupJooqDao,
       @Readonly SecretContentJooqDao secretContentJooqDao,
       @Readonly SecretSeriesJooqDao secretSeriesJooqDao) {
-    return new AclDAO(jooqContext, clientJooqDao, groupJooqDao, secretContentJooqDao,
+    return new AclDAO(jooqContext, clientDAO, groupJooqDao, secretContentJooqDao,
         secretSeriesJooqDao);
   }
 

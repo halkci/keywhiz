@@ -45,7 +45,7 @@ public class AclDAOTest {
   Client client1, client2;
   Group group1, group2, group3;
   Secret secret1, secret2;
-  ClientJooqDao clientJooqDao;
+  ClientDAO clientDAO;
   GroupJooqDao groupJooqDao;
   SecretJooqDao secretJooqDao;
   SecretSeriesJooqDao secretSeriesJooqDao;
@@ -59,12 +59,12 @@ public class AclDAOTest {
     jooqContext.delete(SECRETS).execute();
     jooqContext.delete(SECRETS_CONTENT).execute();
 
-    clientJooqDao = new ClientJooqDao(jooqContext);
-    long id = clientJooqDao.createClient("client1", "creator", Optional.empty());
-    client1 = clientJooqDao.getClientById(id).get();
+    clientDAO = new ClientDAO(jooqContext);
+    long id = clientDAO.createClient("client1", "creator", Optional.empty());
+    client1 = clientDAO.getClientById(id).get();
 
-    id = clientJooqDao.createClient("client2", "creator", Optional.empty());
-    client2 = clientJooqDao.getClientById(id).get();
+    id = clientDAO.createClient("client2", "creator", Optional.empty());
+    client2 = clientDAO.getClientById(id).get();
 
     groupJooqDao = new GroupJooqDao(jooqContext);
     id = groupJooqDao.createGroup("group1", "creator", Optional.empty());
@@ -84,7 +84,7 @@ public class AclDAOTest {
     secret1 = secretFixtures.createSecret("secret1", "c2VjcmV0MQ==", VersionGenerator.now().toHex());
     secret2 = secretFixtures.createSecret("secret2", "c2VjcmV0Mg==");
 
-    aclDAO = new AclDAO(jooqContext, clientJooqDao, groupJooqDao, secretContentJooqDao,
+    aclDAO = new AclDAO(jooqContext, clientDAO, groupJooqDao, secretContentJooqDao,
         secretSeriesJooqDao);
   }
 
@@ -148,7 +148,7 @@ public class AclDAOTest {
     groupJooqDao.deleteGroup(group1);
     assertThat(membershipsTableSize()).isEqualTo(before - 1);
 
-    clientJooqDao.deleteClient(client2);
+    clientDAO.deleteClient(client2);
     assertThat(membershipsTableSize()).isEqualTo(before - 2);
   }
 
