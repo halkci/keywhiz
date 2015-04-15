@@ -22,11 +22,11 @@ import org.jooq.DSLContext;
 
 import static keywhiz.jooq.tables.Users.USERS;
 
-public class UserJooqDao {
+public class UserDAO {
   private final DSLContext dslContext;
 
   @Inject
-  public UserJooqDao(DSLContext dslContext) {
+  public UserDAO(DSLContext dslContext) {
     this.dslContext = dslContext;
   }
 

@@ -61,7 +61,7 @@ import keywhiz.service.daos.MapArgumentFactory;
 import keywhiz.service.daos.SecretController;
 import keywhiz.service.daos.SecretDAO;
 import keywhiz.service.daos.SecretSeriesDAO;
-import keywhiz.service.daos.UserJooqDao;
+import keywhiz.service.daos.UserDAO;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.skife.jdbi.v2.ColonPrefixNamedParamStatementRewriter;
@@ -225,7 +225,7 @@ public class ServiceModule extends AbstractModule {
   // Should this be readonly jooqContext?
   @Provides @Singleton Authenticator<BasicCredentials, User> authenticator(KeywhizConfig config,
       DSLContext jooqContext) {
-    UserJooqDao userJooqDao = new UserJooqDao(jooqContext);
-    return config.getUserAuthenticatorFactory().build(userJooqDao);
+    UserDAO userDAO = new UserDAO(jooqContext);
+    return config.getUserAuthenticatorFactory().build(userDAO);
   }
 }

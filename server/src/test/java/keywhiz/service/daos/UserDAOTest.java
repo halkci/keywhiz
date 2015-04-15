@@ -26,14 +26,14 @@ import org.mindrot.jbcrypt.BCrypt;
 import static keywhiz.jooq.tables.Users.USERS;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class UserJooqDaoTest {
+public class UserDAOTest {
   @Rule public final TestDBRule testDBRule = new TestDBRule();
 
-  UserJooqDao userJooqDao;
+  UserDAO userDAO;
   String hashedPassword;
 
   @Before public void setUp() {
-    userJooqDao = new UserJooqDao(testDBRule.jooqContext());
+    userDAO = new UserDAO(testDBRule.jooqContext());
 
     hashedPassword = BCrypt.hashpw("password", BCrypt.gensalt());
 
@@ -47,13 +47,13 @@ public class UserJooqDaoTest {
 
   @Test
   public void getExistingUser() {
-    String retrievedHash = userJooqDao.getHashedPassword("user").orElseThrow(RuntimeException::new);
+    String retrievedHash = userDAO.getHashedPassword("user").orElseThrow(RuntimeException::new);
     assertThat(retrievedHash).isEqualTo(hashedPassword);
   }
 
   @Test
   public void getNonexistentUser() {
-    assertThat(userJooqDao.getHashedPassword("non-user").isPresent()).isFalse();
+    assertThat(userDAO.getHashedPassword("non-user").isPresent()).isFalse();
   }
 
 }

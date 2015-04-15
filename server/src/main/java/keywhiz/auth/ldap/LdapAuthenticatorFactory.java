@@ -13,7 +13,7 @@ import keywhiz.api.validation.ValidX500Name;
 import keywhiz.auth.User;
 import keywhiz.auth.UserAuthenticatorFactory;
 import keywhiz.service.config.Templates;
-import keywhiz.service.daos.UserJooqDao;
+import keywhiz.service.daos.UserDAO;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,8 +71,9 @@ public class LdapAuthenticatorFactory implements UserAuthenticatorFactory {
     return lookup;
   }
 
-  // It's unfortunate that the LDAP code takes a useless UserJooqDao parameter.
-  @Override public Authenticator<BasicCredentials, User> build(UserJooqDao userJooqDao) {
+  // It's unfortunate that the LDAP code takes a useless UserDAO parameter. We could perhaps
+  // refactor things in the future.
+  @Override public Authenticator<BasicCredentials, User> build(UserDAO userDAO) {
     logger.debug("Creating LDAP authenticator");
     LdapConnectionFactory connectionFactory =
         new LdapConnectionFactory(getServer(), getPort(), getUserDN(), getPassword());
