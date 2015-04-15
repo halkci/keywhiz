@@ -35,18 +35,18 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Primary class to interact with {@link Secret}s.
  *
  * Does not map to a table itself, but utilizes both {@link SecretSeriesJooqDao} and
- * {@link SecretContentJooqDao} to provide a more usable API.
+ * {@link SecretContentDAO} to provide a more usable API.
  */
 public class SecretDAO {
   private final DSLContext dslContext;
-  private SecretContentJooqDao secretContentJooqDao;
+  private SecretContentDAO secretContentDAO;
   private SecretSeriesJooqDao secretSeriesJooqDao;
 
   @Inject
-  public SecretDAO(DSLContext dslContext, SecretContentJooqDao secretContentJooqDao,
+  public SecretDAO(DSLContext dslContext, SecretContentDAO secretContentDAO,
       SecretSeriesJooqDao secretSeriesJooqDao) {
     this.dslContext = dslContext;
-    this.secretContentJooqDao = secretContentJooqDao;
+    this.secretContentDAO = secretContentDAO;
     this.secretSeriesJooqDao = secretSeriesJooqDao;
   }
 
@@ -66,7 +66,7 @@ public class SecretDAO {
             generationOptions);
       }
 
-      secretContentJooqDao.createSecretContent(secretId, encryptedSecret, version, creator,
+      secretContentDAO.createSecretContent(secretId, encryptedSecret, version, creator,
           metadata);
       return secretId;
     });
@@ -82,7 +82,8 @@ public class SecretDAO {
 
       Optional<SecretSeries> series = secretSeriesJooqDao.getSecretSeriesById(secretId);
       if (series.isPresent()) {
-        ImmutableList<SecretContent> contents = secretContentJooqDao.getSecretContentsBySecretId(secretId);
+        ImmutableList<SecretContent> contents =
+            secretContentDAO.getSecretContentsBySecretId(secretId);
         for (SecretContent content : contents) {
           secretsBuilder.add(SecretSeriesAndContent.of(series.get(), content));
         }
@@ -108,7 +109,7 @@ public class SecretDAO {
       }
 
       Optional<SecretContent> content =
-          secretContentJooqDao.getSecretContentBySecretIdAndVersion(secretId, version);
+          secretContentDAO.getSecretContentBySecretIdAndVersion(secretId, version);
       if (!content.isPresent()) {
         return Optional.empty();
       }
@@ -131,7 +132,7 @@ public class SecretDAO {
         return ImmutableList.of();
       }
 
-      return secretContentJooqDao.getVersionFromSecretId(series.get().getId());
+      return secretContentDAO.getVersionFromSecretId(series.get().getId());
     });
   }
 
@@ -152,7 +153,7 @@ public class SecretDAO {
       }
 
       Optional<SecretContent> secretContent =
-          secretContentJooqDao.getSecretContentBySecretIdAndVersion(secretSeries.get().getId(),
+          secretContentDAO.getSecretContentBySecretIdAndVersion(secretSeries.get().getId(),
               version);
 
       if (!secretContent.isPresent()) {
@@ -169,8 +170,9 @@ public class SecretDAO {
       ImmutableList.Builder<SecretSeriesAndContent> secretsBuilder = ImmutableList.builder();
 
       secretSeriesJooqDao.getSecretSeries()
-          .forEach((series) -> secretContentJooqDao.getSecretContentsBySecretId(series.getId())
-              .forEach((content) -> secretsBuilder.add(SecretSeriesAndContent.of(series, content))));
+          .forEach((series) -> secretContentDAO.getSecretContentsBySecretId(series.getId())
+              .forEach(
+                  (content) -> secretsBuilder.add(SecretSeriesAndContent.of(series, content))));
 
       return secretsBuilder.build();
     });
@@ -202,11 +204,11 @@ public class SecretDAO {
         return;
       }
 
-      secretContentJooqDao.deleteSecretContentBySecretIdAndVersion(secretSeries.get().getId(),
+      secretContentDAO.deleteSecretContentBySecretIdAndVersion(secretSeries.get().getId(),
           version);
 
       long seriesId = secretSeries.get().getId();
-      if (secretContentJooqDao.getSecretContentsBySecretId(seriesId).isEmpty()) {
+      if (secretContentDAO.getSecretContentsBySecretId(seriesId).isEmpty()) {
         secretSeriesJooqDao.deleteSecretSeriesById(seriesId);
       }
     });

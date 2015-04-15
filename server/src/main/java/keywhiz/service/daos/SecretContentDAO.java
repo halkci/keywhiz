@@ -31,11 +31,11 @@ import static keywhiz.jooq.tables.SecretsContent.SECRETS_CONTENT;
 /**
  * Interacts with 'secrets_content' table and actions on {@link SecretContent} entities.
  */
-public class SecretContentJooqDao {
+public class SecretContentDAO {
   private final DSLContext dslContext;
 
   @Inject
-  public SecretContentJooqDao(DSLContext dslContext) {
+  public SecretContentDAO(DSLContext dslContext) {
     this.dslContext = dslContext;
   }
 
@@ -57,7 +57,7 @@ public class SecretContentJooqDao {
   public Optional<SecretContent> getSecretContentById(long id) {
     SecretsContentRecord r = dslContext.fetchOne(SECRETS_CONTENT, SECRETS_CONTENT.ID.eq((int) id));
     if (r != null) {
-      return Optional.of(r.map(new SecretContentJooqMapper()));
+      return Optional.of(r.map(new SecretContentMapper()));
     }
     return Optional.empty();
   }
@@ -67,7 +67,7 @@ public class SecretContentJooqDao {
         SECRETS_CONTENT,
         SECRETS_CONTENT.SECRETID.eq((int) secretId).and(SECRETS_CONTENT.VERSION.eq(version)));
     if (r != null) {
-      return Optional.of(r.map(new SecretContentJooqMapper()));
+      return Optional.of(r.map(new SecretContentMapper()));
     }
     return Optional.empty();
   }
@@ -78,7 +78,7 @@ public class SecretContentJooqDao {
         .from(SECRETS_CONTENT)
         .where(SECRETS_CONTENT.SECRETID.eq((int) secretId))
         .fetch()
-        .map(new SecretContentJooqMapper());
+        .map(new SecretContentMapper());
 
     return ImmutableList.copyOf(r);
   }

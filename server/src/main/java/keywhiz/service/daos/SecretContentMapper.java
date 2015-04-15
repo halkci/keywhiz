@@ -27,7 +27,7 @@ import keywhiz.jooq.tables.records.SecretsContentRecord;
 import org.jooq.Record;
 import org.jooq.RecordMapper;
 
-class SecretContentJooqMapper implements RecordMapper<Record, SecretContent> {
+class SecretContentMapper implements RecordMapper<Record, SecretContent> {
   public SecretContent map(Record record) {
     SecretsContentRecord r = (SecretsContentRecord) record;
 
