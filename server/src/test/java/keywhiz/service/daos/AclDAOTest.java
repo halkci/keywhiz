@@ -48,7 +48,7 @@ public class AclDAOTest {
   ClientDAO clientDAO;
   GroupDAO groupDAO;
   SecretDAO secretDAO;
-  SecretSeriesJooqDao secretSeriesJooqDao;
+  SecretSeriesDAO secretSeriesDAO;
   AclDAO aclDAO;
 
   @Before
@@ -77,15 +77,14 @@ public class AclDAOTest {
     group3 = groupDAO.getGroupById(id).get();
 
     SecretContentDAO secretContentDAO = new SecretContentDAO(jooqContext);
-    secretSeriesJooqDao = new SecretSeriesJooqDao(jooqContext);
+    secretSeriesDAO = new SecretSeriesDAO(jooqContext);
 
-    secretDAO = new SecretDAO(jooqContext, secretContentDAO, secretSeriesJooqDao);
+    secretDAO = new SecretDAO(jooqContext, secretContentDAO, secretSeriesDAO);
     SecretFixtures secretFixtures = SecretFixtures.using(secretDAO);
     secret1 = secretFixtures.createSecret("secret1", "c2VjcmV0MQ==", VersionGenerator.now().toHex());
     secret2 = secretFixtures.createSecret("secret2", "c2VjcmV0Mg==");
 
-    aclDAO = new AclDAO(jooqContext, clientDAO, groupDAO, secretContentDAO,
-        secretSeriesJooqDao);
+    aclDAO = new AclDAO(jooqContext, clientDAO, groupDAO, secretContentDAO, secretSeriesDAO);
   }
 
   @Test
@@ -116,7 +115,7 @@ public class AclDAOTest {
     groupDAO.deleteGroup(group1);
     assertThat(accessGrantsTableSize()).isEqualTo(before - 1);
 
-    secretSeriesJooqDao.deleteSecretSeriesById(secret2.getId());
+    secretSeriesDAO.deleteSecretSeriesById(secret2.getId());
     assertThat(accessGrantsTableSize()).isEqualTo(before - 2);
   }
 
@@ -254,7 +253,7 @@ public class AclDAOTest {
 
   @Test
   public void getSecretSeriesFor() throws Exception {
-    SecretSeries secretSeries1 = secretSeriesJooqDao.getSecretSeriesById(secret1.getId()).get();
+    SecretSeries secretSeries1 = secretSeriesDAO.getSecretSeriesById(secret1.getId()).get();
 
     aclDAO.enrollClient(client2.getId(), group1.getId());
     aclDAO.enrollClient(client2.getId(), group3.getId());

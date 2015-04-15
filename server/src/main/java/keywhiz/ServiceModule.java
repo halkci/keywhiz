@@ -61,7 +61,7 @@ import keywhiz.service.daos.MapArgumentFactory;
 import keywhiz.service.daos.SecretContentDAO;
 import keywhiz.service.daos.SecretController;
 import keywhiz.service.daos.SecretDAO;
-import keywhiz.service.daos.SecretSeriesJooqDao;
+import keywhiz.service.daos.SecretSeriesDAO;
 import keywhiz.service.daos.UserDAO;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
@@ -205,15 +205,14 @@ public class ServiceModule extends AbstractModule {
     return new SecretContentDAO(jooqContext);
   }
 
-  @Provides @Singleton SecretSeriesJooqDao secretSeriesJooqDao(DSLContext jooqContext) {
-    return new SecretSeriesJooqDao(jooqContext);
+  @Provides @Singleton SecretSeriesDAO secretSeriesDAO(DSLContext jooqContext) {
+    return new SecretSeriesDAO(jooqContext);
   }
 
   @Provides @Singleton AclDAO aclDAO(DSLContext jooqContext, ClientDAO clientDAO,
       GroupDAO groupDAO, SecretContentDAO secretContentDAO,
-      SecretSeriesJooqDao secretSeriesJooqDao) {
-    return new AclDAO(jooqContext, clientDAO, groupDAO, secretContentDAO,
-        secretSeriesJooqDao);
+      SecretSeriesDAO secretSeriesDAO) {
+    return new AclDAO(jooqContext, clientDAO, groupDAO, secretContentDAO, secretSeriesDAO);
   }
 
   // We should add back the @Readonly annotation once JDBI is removed.
@@ -233,21 +232,20 @@ public class ServiceModule extends AbstractModule {
     return new SecretContentDAO(jooqContext);
   }
 
-  @Provides @Singleton @Readonly SecretSeriesJooqDao readonlySecretSeriesJooqDao(@Readonly DSLContext jooqContext) {
-    return new SecretSeriesJooqDao(jooqContext);
+  @Provides @Singleton @Readonly SecretSeriesDAO readonlySecretSeriesDAO(@Readonly DSLContext jooqContext) {
+    return new SecretSeriesDAO(jooqContext);
   }
 
   @Provides @Singleton @Readonly SecretDAO readonlySecretDAO(@Readonly DSLContext jooqContext,
-      @Readonly SecretContentDAO secretContentDAO, @Readonly SecretSeriesJooqDao secretSeriesJooqDao) {
-    return new SecretDAO(jooqContext, secretContentDAO, secretSeriesJooqDao);
+      @Readonly SecretContentDAO secretContentDAO, @Readonly SecretSeriesDAO secretSeriesDAO) {
+    return new SecretDAO(jooqContext, secretContentDAO, secretSeriesDAO);
   }
 
   @Provides @Singleton @Readonly AclDAO readonlyAclJooqDao(@Readonly DSLContext jooqContext,
       @Readonly ClientDAO clientDAO, @Readonly GroupDAO groupDAO,
       @Readonly SecretContentDAO secretContentDAO,
-      @Readonly SecretSeriesJooqDao secretSeriesJooqDao) {
-    return new AclDAO(jooqContext, clientDAO, groupDAO, secretContentDAO,
-        secretSeriesJooqDao);
+      @Readonly SecretSeriesDAO secretSeriesDAO) {
+    return new AclDAO(jooqContext, clientDAO, groupDAO, secretContentDAO, secretSeriesDAO);
   }
 
   // Should this be readonly jooqContext?

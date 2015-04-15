@@ -48,7 +48,7 @@ import keywhiz.api.model.VersionGenerator;
 import keywhiz.auth.User;
 import keywhiz.service.daos.AclDAO;
 import keywhiz.service.daos.SecretController;
-import keywhiz.service.daos.SecretSeriesJooqDao;
+import keywhiz.service.daos.SecretSeriesDAO;
 import keywhiz.service.exceptions.ConflictException;
 import org.jooq.exception.DataAccessException;
 import org.slf4j.Logger;
@@ -69,11 +69,11 @@ public class SecretsResource {
 
   private final SecretController secretController;
   private final AclDAO aclDAO;
-  private final SecretSeriesJooqDao secretSeriesDAO;
+  private final SecretSeriesDAO secretSeriesDAO;
 
   @Inject
   public SecretsResource(SecretController secretController, AclDAO aclDAO,
-      SecretSeriesJooqDao secretSeriesDAO) {
+      SecretSeriesDAO secretSeriesDAO) {
     this.secretController = secretController;
     this.aclDAO = aclDAO;
     this.secretSeriesDAO = secretSeriesDAO;

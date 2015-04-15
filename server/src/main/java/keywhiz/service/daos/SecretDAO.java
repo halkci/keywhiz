@@ -34,20 +34,20 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Primary class to interact with {@link Secret}s.
  *
- * Does not map to a table itself, but utilizes both {@link SecretSeriesJooqDao} and
+ * Does not map to a table itself, but utilizes both {@link SecretSeriesDAO} and
  * {@link SecretContentDAO} to provide a more usable API.
  */
 public class SecretDAO {
   private final DSLContext dslContext;
   private SecretContentDAO secretContentDAO;
-  private SecretSeriesJooqDao secretSeriesJooqDao;
+  private SecretSeriesDAO secretSeriesDAO;
 
   @Inject
   public SecretDAO(DSLContext dslContext, SecretContentDAO secretContentDAO,
-      SecretSeriesJooqDao secretSeriesJooqDao) {
+      SecretSeriesDAO secretSeriesDAO) {
     this.dslContext = dslContext;
     this.secretContentDAO = secretContentDAO;
-    this.secretSeriesJooqDao = secretSeriesJooqDao;
+    this.secretSeriesDAO = secretSeriesDAO;
   }
 
   @VisibleForTesting
@@ -57,12 +57,12 @@ public class SecretDAO {
     // TODO(jlfwong): Should the description be updated...?
 
     return dslContext.transactionResult(configuration -> {
-      Optional<SecretSeries> secretSeries = secretSeriesJooqDao.getSecretSeriesByName(name);
+      Optional<SecretSeries> secretSeries = secretSeriesDAO.getSecretSeriesByName(name);
       long secretId;
       if (secretSeries.isPresent()) {
         secretId = secretSeries.get().getId();
       } else {
-        secretId = secretSeriesJooqDao.createSecretSeries(name, creator, description, type,
+        secretId = secretSeriesDAO.createSecretSeries(name, creator, description, type,
             generationOptions);
       }
 
@@ -80,7 +80,7 @@ public class SecretDAO {
     return dslContext.transactionResult(configuration -> {
       ImmutableList.Builder<SecretSeriesAndContent> secretsBuilder = ImmutableList.builder();
 
-      Optional<SecretSeries> series = secretSeriesJooqDao.getSecretSeriesById(secretId);
+      Optional<SecretSeries> series = secretSeriesDAO.getSecretSeriesById(secretId);
       if (series.isPresent()) {
         ImmutableList<SecretContent> contents =
             secretContentDAO.getSecretContentsBySecretId(secretId);
@@ -103,7 +103,7 @@ public class SecretDAO {
 
     // Cast to fix issue with mvn + java8 (not showing up in Intellij).
     return (Optional<SecretSeriesAndContent>)dslContext.transactionResult(configuration -> {
-      Optional<SecretSeries> series = secretSeriesJooqDao.getSecretSeriesById(secretId);
+      Optional<SecretSeries> series = secretSeriesDAO.getSecretSeriesById(secretId);
       if (!series.isPresent()) {
         return Optional.empty();
       }
@@ -127,7 +127,7 @@ public class SecretDAO {
 
     // Cast to fix issue with mvn + java8 (not showing up in Intellij).
     return (ImmutableList<String>)dslContext.transactionResult(configuration -> {
-      Optional<SecretSeries> series = secretSeriesJooqDao.getSecretSeriesByName(name);
+      Optional<SecretSeries> series = secretSeriesDAO.getSecretSeriesByName(name);
       if (!series.isPresent()) {
         return ImmutableList.of();
       }
@@ -147,7 +147,7 @@ public class SecretDAO {
 
     // Cast to fix issue with mvn + java8 (not showing up in Intellij).
     return (Optional<SecretSeriesAndContent>)dslContext.transactionResult(configuration -> {
-      Optional<SecretSeries> secretSeries = secretSeriesJooqDao.getSecretSeriesByName(name);
+      Optional<SecretSeries> secretSeries = secretSeriesDAO.getSecretSeriesByName(name);
       if (!secretSeries.isPresent()) {
         return Optional.empty();
       }
@@ -169,7 +169,7 @@ public class SecretDAO {
     return dslContext.transactionResult(configuration -> {
       ImmutableList.Builder<SecretSeriesAndContent> secretsBuilder = ImmutableList.builder();
 
-      secretSeriesJooqDao.getSecretSeries()
+      secretSeriesDAO.getSecretSeries()
           .forEach((series) -> secretContentDAO.getSecretContentsBySecretId(series.getId())
               .forEach(
                   (content) -> secretsBuilder.add(SecretSeriesAndContent.of(series, content))));
@@ -185,7 +185,7 @@ public class SecretDAO {
    */
   public void deleteSecretsByName(String name) {
     checkArgument(!name.isEmpty());
-    secretSeriesJooqDao.deleteSecretSeriesByName(name);
+    secretSeriesDAO.deleteSecretSeriesByName(name);
   }
 
   /**
@@ -199,7 +199,7 @@ public class SecretDAO {
     checkNotNull(version);
 
     dslContext.transaction(configuration -> {
-      Optional<SecretSeries> secretSeries = secretSeriesJooqDao.getSecretSeriesByName(name);
+      Optional<SecretSeries> secretSeries = secretSeriesDAO.getSecretSeriesByName(name);
       if (!secretSeries.isPresent()) {
         return;
       }
@@ -209,7 +209,7 @@ public class SecretDAO {
 
       long seriesId = secretSeries.get().getId();
       if (secretContentDAO.getSecretContentsBySecretId(seriesId).isEmpty()) {
-        secretSeriesJooqDao.deleteSecretSeriesById(seriesId);
+        secretSeriesDAO.deleteSecretSeriesById(seriesId);
       }
     });
   }

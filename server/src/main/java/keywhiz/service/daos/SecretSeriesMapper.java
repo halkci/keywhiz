@@ -26,7 +26,7 @@ import org.jooq.RecordMapper;
 
 import static keywhiz.jooq.tables.Secrets.SECRETS;
 
-class SecretSeriesJooqMapper implements RecordMapper<Record, SecretSeries> {
+class SecretSeriesMapper implements RecordMapper<Record, SecretSeries> {
   public SecretSeries map(Record r) {
     Gson gson = new Gson();
     Type optionsType = new TypeToken<HashMap<String, String>>() {}.getType();

@@ -29,11 +29,11 @@ import org.jooq.tools.json.JSONObject;
 
 import static keywhiz.jooq.tables.Secrets.SECRETS;
 
-public class SecretSeriesJooqDao {
+public class SecretSeriesDAO {
   private final DSLContext dslContext;
 
   @Inject
-  public SecretSeriesJooqDao(DSLContext dslContext) {
+  public SecretSeriesDAO(DSLContext dslContext) {
     this.dslContext = dslContext;
   }
 
@@ -59,7 +59,7 @@ public class SecretSeriesJooqDao {
   public Optional<SecretSeries> getSecretSeriesById(long id) {
     SecretsRecord r = dslContext.fetchOne(SECRETS, SECRETS.ID.eq((int) id));
     if (r != null) {
-      return Optional.of(r.map(new SecretSeriesJooqMapper()));
+      return Optional.of(r.map(new SecretSeriesMapper()));
     }
     return Optional.empty();
   }
@@ -67,7 +67,7 @@ public class SecretSeriesJooqDao {
   public Optional<SecretSeries> getSecretSeriesByName(String name) {
     SecretsRecord r = dslContext.fetchOne(SECRETS, SECRETS.NAME.eq(name));
     if (r != null) {
-      return Optional.of(r.map(new SecretSeriesJooqMapper()));
+      return Optional.of(r.map(new SecretSeriesMapper()));
     }
     return Optional.empty();
   }
@@ -77,7 +77,7 @@ public class SecretSeriesJooqDao {
         .select()
         .from(SECRETS)
         .fetch()
-        .map(new SecretSeriesJooqMapper());
+        .map(new SecretSeriesMapper());
 
     return ImmutableList.copyOf(r);
   }

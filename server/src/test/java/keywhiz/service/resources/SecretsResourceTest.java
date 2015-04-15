@@ -37,7 +37,7 @@ import keywhiz.api.model.Secret;
 import keywhiz.auth.User;
 import keywhiz.service.daos.AclDAO;
 import keywhiz.service.daos.SecretController;
-import keywhiz.service.daos.SecretSeriesJooqDao;
+import keywhiz.service.daos.SecretSeriesDAO;
 import keywhiz.service.exceptions.ConflictException;
 import org.jooq.exception.DataAccessException;
 import org.junit.Before;
@@ -57,7 +57,7 @@ public class SecretsResourceTest {
   private static final OffsetDateTime NOW = OffsetDateTime.now();
 
   @Mock AclDAO aclDAO;
-  @Mock SecretSeriesJooqDao secretSeriesJooqDao;
+  @Mock SecretSeriesDAO secretSeriesDAO;
   @Mock SecretController secretController;
 
   User user = User.named("user");
@@ -70,7 +70,7 @@ public class SecretsResourceTest {
 
   @Before
   public void setUp() {
-    resource = new SecretsResource(secretController, aclDAO, secretSeriesJooqDao);
+    resource = new SecretsResource(secretController, aclDAO, secretSeriesDAO);
   }
 
   @Test
@@ -107,7 +107,7 @@ public class SecretsResourceTest {
     when(secretController.getSecretsById(0xdeadbeef)).thenReturn(ImmutableList.of(secret));
 
     Response response = resource.deleteSecret(user, new LongParam(Long.toString(0xdeadbeef)));
-    verify(secretSeriesJooqDao).deleteSecretSeriesById(0xdeadbeef);
+    verify(secretSeriesDAO).deleteSecretSeriesById(0xdeadbeef);
     assertThat(response.getStatus()).isEqualTo(204);
   }
 

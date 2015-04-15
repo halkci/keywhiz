@@ -28,7 +28,7 @@ import keywhiz.api.model.SecretSeries;
 import keywhiz.api.model.VersionGenerator;
 import keywhiz.service.daos.AclDAO;
 import keywhiz.service.daos.SecretController;
-import keywhiz.service.daos.SecretSeriesJooqDao;
+import keywhiz.service.daos.SecretSeriesDAO;
 import keywhiz.service.exceptions.ConflictException;
 import org.jooq.exception.DataAccessException;
 import org.junit.Before;
@@ -54,14 +54,14 @@ public class AutomationSecretResourceTest {
   @Mock SecretController secretController;
   @Mock SecretController.SecretBuilder secretBuilder;
   @Mock AclDAO aclDAO;
-  @Mock SecretSeriesJooqDao secretSeriesJooqDao;
+  @Mock SecretSeriesDAO secretSeriesDAO;
 
   AutomationClient automation = AutomationClient.of(
       new Client(1, "automation", "Automation client", NOW, "test", NOW, "test", true, true));
 
   @Before
   public void setUp() {
-    resource = new AutomationSecretResource(secretController, aclDAO, secretSeriesJooqDao);
+    resource = new AutomationSecretResource(secretController, aclDAO, secretSeriesDAO);
 
     when(secretController.builder(anyString(), anyString(), anyString())).thenReturn(secretBuilder);
   }
@@ -111,11 +111,11 @@ public class AutomationSecretResourceTest {
         null,
         null);
 
-    when(secretSeriesJooqDao.getSecretSeriesByName(secretSeries.getName()))
+    when(secretSeriesDAO.getSecretSeriesByName(secretSeries.getName()))
         .thenReturn(Optional.of(secretSeries));
 
     resource.deleteSecretSeries(automation, "mySecret");
-    verify(secretSeriesJooqDao).deleteSecretSeriesByName(secretSeries.getName());
+    verify(secretSeriesDAO).deleteSecretSeriesByName(secretSeries.getName());
   }
 
   @Test(expected = ConflictException.class)
