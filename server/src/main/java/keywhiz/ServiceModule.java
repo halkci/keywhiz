@@ -55,7 +55,7 @@ import keywhiz.service.crypto.ContentCryptographer;
 import keywhiz.service.crypto.CryptoModule;
 import keywhiz.service.crypto.SecretTransformer;
 import keywhiz.service.daos.AclDeps;
-import keywhiz.service.daos.AclJooqDao;
+import keywhiz.service.daos.AclDAO;
 import keywhiz.service.daos.ClientDAO;
 import keywhiz.service.daos.GroupDAO;
 import keywhiz.service.daos.MapArgumentFactory;
@@ -228,8 +228,8 @@ public class ServiceModule extends AbstractModule {
     return config.getUserAuthenticatorFactory().build(dbi);
   }
 
-  @Provides @Singleton AclJooqDao aclJooqDao(DSLContext jooqContext, DBI dbi) {
-    return new AclJooqDao(jooqContext, dbi.onDemand(AclDeps.class));
+  @Provides @Singleton AclDAO aclDao(DSLContext jooqContext, DBI dbi) {
+    return new AclDAO(jooqContext, dbi.onDemand(AclDeps.class));
   }
 
   // We should add back the @Readonly annotation once JDBI is removed.
@@ -237,8 +237,8 @@ public class ServiceModule extends AbstractModule {
     return DSL.using(dataSource.getConnection());
   }
 
-  @Provides @Singleton @Readonly AclJooqDao readonlyAclJooqDao(@Readonly DSLContext jooqContext,
+  @Provides @Singleton @Readonly AclDAO readonlyAclDao(@Readonly DSLContext jooqContext,
       @Readonly DBI dbi) {
-    return new AclJooqDao(jooqContext, dbi.onDemand(AclDeps.class));
+    return new AclDAO(jooqContext, dbi.onDemand(AclDeps.class));
   }
 }
